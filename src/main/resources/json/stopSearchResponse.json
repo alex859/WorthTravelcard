@@ -1,0 +1,52 @@
+{
+  "$type": "Tfl.Api.Presentation.Entities.SearchResponse, Tfl.Api.Presentation.Entities",
+  "query": "limehouse",
+  "total": 3,
+  "matches": [
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedStop, Tfl.Api.Presentation.Entities",
+      "stationId": "HUBLHS",
+      "icsId": "1001180",
+      "topMostParentId": "HUBLHS",
+      "modes": [
+        "national-rail",
+        "dlr",
+        "bus"
+      ],
+      "stopType": "TransportInterchange",
+      "zone": "2",
+      "id": "HUBLHS",
+      "name": "Limehouse Station",
+      "lat": 51.512469,
+      "lon": -0.039799
+    },
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedStop, Tfl.Api.Presentation.Entities",
+      "parentId": "HUBLHS",
+      "stationId": "910GLIMHSE",
+      "icsId": "1001180",
+      "topMostParentId": "HUBLHS",
+      "modes": ["national-rail"],
+      "stopType": "NaptanRailStation",
+      "zone": "2",
+      "id": "910GLIMHSE",
+      "name": "Limehouse Rail Station",
+      "lat": 51.512541,
+      "lon": -0.039796
+    },
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedStop, Tfl.Api.Presentation.Entities",
+      "parentId": "HUBLHS",
+      "stationId": "940GZZDLLIM",
+      "icsId": "1001180",
+      "topMostParentId": "HUBLHS",
+      "modes": ["dlr"],
+      "stopType": "NaptanMetroStation",
+      "zone": "2",
+      "id": "940GZZDLLIM",
+      "name": "Limehouse DLR Station",
+      "lat": 51.512397,
+      "lon": -0.039802
+    }
+  ]
+}
