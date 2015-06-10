@@ -2,22 +2,21 @@ package org.alex859.worthtravelcard.service.impl;
 
 import org.alex859.worthtravelcard.service.TflService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.gov.tfl.FareSearchResponse;
 import uk.gov.tfl.Match;
 import uk.gov.tfl.StopSearchResponse;
-import uk.gov.tfl.TicketsAvailable;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +34,10 @@ public class DefaultTflService implements TflService
    private String appKey;
 
    @Override
-   public List<String> getNaptanCodes(final String query)
+   public List<String> getStationCodes(final String query)
    {
+      Assert.isTrue(StringUtils.isNotEmpty(query), "Location cannot be empty");
+
       final UriComponentsBuilder builder = getUriBuilder(stopSearchUrl)
               .queryParam("query", query)
               .queryParam("modes", "dlr,overground,tflrail,tube,national-rail");
@@ -58,6 +59,9 @@ public class DefaultTflService implements TflService
    @Override
    public Double getFare(final String fromCode, final String toCode)
    {
+      Assert.isTrue(StringUtils.isNotEmpty(fromCode), "Start location code cannot be empty");
+      Assert.isTrue(StringUtils.isNotEmpty(toCode), "End location code cannot be empty");
+
       final UriComponentsBuilder builder = getUriBuilder(fareSearchUrl)
               .queryParam("id", fromCode)
               .queryParam("toStopPointId", toCode);
@@ -82,19 +86,6 @@ public class DefaultTflService implements TflService
       return UriComponentsBuilder.fromHttpUrl(baseUrl)
               .queryParam("app_id", appId)
               .queryParam("app_key", appKey);
-   }
-
-   protected String decode(final String encoded)
-   {
-      try
-      {
-         return URLDecoder.decode(encoded, "UTF-8");
-      } catch (UnsupportedEncodingException e)
-      {
-         e.printStackTrace();
-      }
-
-      return null;
    }
 
    @Autowired

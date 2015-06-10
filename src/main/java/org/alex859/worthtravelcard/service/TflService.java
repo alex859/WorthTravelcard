@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface TflService
 {
-   List<String> getNaptanCodes(String query);
+   List<String> getStationCodes(String query);
    Double getFare(String fromCode, String toCode);
 }
