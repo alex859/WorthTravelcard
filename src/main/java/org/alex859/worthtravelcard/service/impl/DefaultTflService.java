@@ -31,22 +31,23 @@ import java.util.stream.Collectors;
 public class DefaultTflService implements TflService
 {
    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultTflService.class);
+   // London Bridge [London Underground] -> London Bridge
+   private static final Pattern STOP_DETAILS_PATTERN = Pattern.compile("(\\[.+\\]?)");
+   private static final List<Mode> DEFAULT_MODES = Arrays.asList(Mode.TUBE, Mode.DLR, Mode.OVERGROUND, Mode.TFL_RAIL, Mode.NATIONAL_RAIL);
 
    private RestTemplate restTemplate;
    private String stopSearchUrl;
    private String fareSearchUrl;
+
    private String appId;
    private String appKey;
-
-   // London Bridge [London Underground] -> London Bridge
-   private static final Pattern stopDetailsPattern = Pattern.compile("(\\[.+\\]?)");
 
    @Override
    public List<Station> getStations(final String query)
    {
       Assert.isTrue(StringUtils.isNotEmpty(query), "Location cannot be empty");
 
-      final Matcher matcher = stopDetailsPattern.matcher(query);
+      final Matcher matcher = STOP_DETAILS_PATTERN.matcher(query);
       String newQuery = query;
       while (matcher.find())
       {
@@ -55,6 +56,7 @@ public class DefaultTflService implements TflService
 
       final UriComponentsBuilder builder = getUriBuilder(stopSearchUrl)
               .queryParam("query", newQuery.trim())
+              .queryParam("faresOnly", true)
               .queryParam("modes", getModes(query).stream()
                                        .map(Mode::getTflCode)
                                        .collect(Collectors.joining(",")));
@@ -66,7 +68,7 @@ public class DefaultTflService implements TflService
          try
          {
             return stopSearchResponse.getMatches().stream()
-                    .sorted((m1, m2) -> compare(query, m1, m2))
+                    //.sorted((m1, m2) -> compare(query, m1, m2))
                     .map(this::getFromMatch)
                     .collect(Collectors.toList());
          }
@@ -129,15 +131,7 @@ public class DefaultTflService implements TflService
       final List<Mode> modeList = Arrays.stream(Mode.values())
               .filter(m -> query.contains(m.getOysterCode())).collect(Collectors.toList());
 
-      return CollectionUtils.isNotEmpty(modeList) ? modeList : Arrays.asList(Mode.values());
-   }
-
-   protected int compare(final String query, final Match m1, final Match m2)
-   {
-      final Integer levenshteinDistance1 = StringUtils.getLevenshteinDistance(query, m1.getName());
-      final Integer levenshteinDistance2 = StringUtils.getLevenshteinDistance(query, m2.getName());
-
-      return levenshteinDistance1.compareTo(levenshteinDistance2);
+      return CollectionUtils.isNotEmpty(modeList) ? modeList : DEFAULT_MODES;
    }
 
    protected Station getFromMatch(final Match match)

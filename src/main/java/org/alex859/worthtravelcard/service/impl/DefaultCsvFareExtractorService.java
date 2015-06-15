@@ -62,7 +62,7 @@ public class DefaultCsvFareExtractorService implements CsvFareExtractorService
               .skip(2)
               .map(l -> l.split(",")[3].replace("\"", ""))
               .filter(s -> s.contains(" to ") && !s.contains("Bus journey") && !s.contains("No touch"))
-              .peek(l -> LOGGER.info("CICCIO: {}", l))
+              .peek(l -> LOGGER.info("{}", l))
               .map(s -> {
                  final String[] split = s.split(" to ");
                  return fareCalculatorService.getFare(split[0], split[1]);
