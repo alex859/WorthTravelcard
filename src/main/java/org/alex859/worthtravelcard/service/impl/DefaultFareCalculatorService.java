@@ -1,5 +1,6 @@
 package org.alex859.worthtravelcard.service.impl;
 
+import org.alex859.worthtravelcard.model.Station;
 import org.alex859.worthtravelcard.service.FareCalculatorService;
 import org.alex859.worthtravelcard.service.TflService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,13 +29,16 @@ public class DefaultFareCalculatorService implements FareCalculatorService
       Assert.isTrue(StringUtils.isNotEmpty(from), "Start location cannot be empty");
       Assert.isTrue(StringUtils.isNotEmpty(to), "End location cannot be empty");
 
-      final List<String> fromCodes = tflService.getStationCodes(from);
-      final List<String> toCodes = tflService.getStationCodes(to);
+      final List<Station> fromStations = tflService.getStations(from);
+      final List<Station> toStations = tflService.getStations(to);
 
-      if (CollectionUtils.isNotEmpty(fromCodes) && CollectionUtils.isNotEmpty(toCodes))
+      if (CollectionUtils.isNotEmpty(fromStations) && CollectionUtils.isNotEmpty(toStations))
       {
-         return fromCodes.stream()
-                 .flatMap(c1 -> toCodes.stream().map(c2 -> tflService.getFare(c1, c2)).filter(c -> c != null).peek(c -> LOGGER.info("Cost: {}", c)))
+         return fromStations.stream()
+                 .flatMap(c1 -> toStations.stream()
+                         .map(c2 -> tflService.getFare(c1, c2))
+                         .filter(c -> c != null)
+                         .peek(c -> LOGGER.info("Cost: {}", c)))
                  .filter(d -> d != null)
                  .mapToDouble(d -> d)
                  .peek(d -> LOGGER.info("Found fare from {} to {}: {}", from, to, d))

@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author alex859 <alessandro.ciccimarra@gmail.com>.
@@ -60,12 +61,13 @@ public class DefaultCsvFareExtractorService implements CsvFareExtractorService
       csvLines.stream()
               .skip(2)
               .map(l -> l.split(",")[3].replace("\"", ""))
-              .filter(s -> !s.contains("Bus journey") && s.contains(" to "))
+              .filter(s -> s.contains(" to ") && !s.contains("Bus journey") && !s.contains("No touch"))
+              .peek(l -> LOGGER.info("CICCIO: {}", l))
               .map(s -> {
                  final String[] split = s.split(" to ");
                  return fareCalculatorService.getFare(split[0], split[1]);
               })
-              .forEach(d -> LOGGER.info(d.toString()));
+              .collect(Collectors.toList());
 
       return result;
    }

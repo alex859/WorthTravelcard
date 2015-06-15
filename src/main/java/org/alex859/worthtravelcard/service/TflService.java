@@ -1,5 +1,7 @@
 package org.alex859.worthtravelcard.service;
 
+import org.alex859.worthtravelcard.model.Station;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,6 @@ import java.util.List;
  */
 public interface TflService
 {
-   List<String> getStationCodes(String query);
-   Double getFare(String fromCode, String toCode);
+   List<Station> getStations(String query);
+   Double getFare(Station fromCode, Station toCode);
 }

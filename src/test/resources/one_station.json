@@ -1,0 +1,21 @@
+{
+  "$type": "Tfl.Api.Presentation.Entities.SearchResponse, Tfl.Api.Presentation.Entities",
+  "query": "limehouse",
+  "total": 1,
+  "matches": [
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedStop, Tfl.Api.Presentation.Entities",
+      "parentId": "HUBLHS",
+      "stationId": "940GZZDLLIM",
+      "icsId": "1001180",
+      "topMostParentId": "HUBLHS",
+      "modes": ["dlr"],
+      "stopType": "NaptanMetroStation",
+      "zone": "2",
+      "id": "940GZZDLLIM",
+      "name": "Limehouse DLR Station",
+      "lat": 51.512397,
+      "lon": -0.039802
+    }
+  ]
+}
